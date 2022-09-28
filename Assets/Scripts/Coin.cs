@@ -7,6 +7,7 @@ public class Coin : MonoBehaviour
     private int _amount = 10;
     [SerializeField]
     private GameObject _cointTakenEffectPrefab;
+    
     private void OnTriggerEnter(Collider other)
     {
         if (other.GetComponent<Ball>())

@@ -18,6 +18,7 @@ public class CoinsManager : MonoBehaviour
     private int _coinsInUI;
     private int _startTextFontSize;
     private Coroutine _coinsAmountUptadingCoroutine;
+    
     private void Awake()
     {
         if (Instance)

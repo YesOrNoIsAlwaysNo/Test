@@ -10,6 +10,7 @@ public class CameraMovement : MonoBehaviour
     [SerializeField]
     private Vector3 _offset;
     public Camera Camera { get; private set; }
+    
     private void Awake()
     {
         Instance = this;

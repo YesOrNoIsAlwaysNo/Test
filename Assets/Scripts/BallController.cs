@@ -9,6 +9,7 @@ public class BallController : MonoBehaviour
     private Vector3 _powerVector;
     // ignore touch if it was not taped on ball on begin phase 
     private bool _ignoreTouch;
+    
     private void Start()
     {
         _lineRenderer = GetComponent<LineRenderer>();
@@ -65,7 +66,6 @@ public class BallController : MonoBehaviour
 
     private Vector3 CalculatePower(Vector2 end)
     {
-
         Vector2 power = (end - _startTouchPosition) * 0.01f;
         Vector3 transformedPower = new Vector3(power.x, 0, power.y) * -1;
         return transformedPower;

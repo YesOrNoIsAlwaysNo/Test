@@ -19,6 +19,7 @@ public class Ball : MonoBehaviour
     public Vector3 velocity { get; private set; }
     private bool _ignoreInput;
     private bool _isScaleAnimating;
+    
     private void Awake()
     {
         Instance = this;
