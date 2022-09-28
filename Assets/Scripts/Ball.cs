@@ -10,9 +10,11 @@ public class Ball : MonoBehaviour
     // parent of ball's graphic part
     [SerializeField]
     private Transform _pivotTransform;
+    [SerializeField]
+    private MeshRenderer _meshRenderer;
     private Vector3 _positionInLastFrame;
     private float _speedInLastFrame;
-    private Vector3 _velocity;
+    public Vector3 velocity { get; private set; }
     private float rotationSpeed;
     private void Awake()
     {
@@ -27,30 +29,28 @@ public class Ball : MonoBehaviour
     {
         Move();
         Rotate();
-        _velocity -= _velocity * Time.deltaTime;
-    }
+        velocity -= velocity * Time.deltaTime;
 
-    private void LateUpdate()
-    {
         float speed = Vector3.Distance(transform.position, _positionInLastFrame) / Time.deltaTime;
         _speedInLastFrame = speed;
         _positionInLastFrame = transform.position;
     }
+
     private void Rotate()
     {
-        Vector3 moveDelta = _velocity.normalized * _speedInLastFrame * Time.deltaTime;
-        Vector3 rotationAxis = Vector3.Cross(_velocity.normalized, Vector3.down);
+        Vector3 moveDelta = velocity.normalized * _speedInLastFrame * Time.deltaTime;
+        Vector3 rotationAxis = Vector3.Cross(velocity.normalized, Vector3.down);
         _graphicTransform.RotateAround(_graphicTransform.position, rotationAxis, Mathf.Sin(moveDelta.magnitude * 1 * 2 * Mathf.PI) * Mathf.Rad2Deg / 2);
     }
     private void Move()
     {
-        transform.Translate(_velocity * Time.deltaTime);
+        transform.Translate(velocity * Time.deltaTime);
     }
     public void AddVelocity(Vector3 velocity)
     {
-        _velocity += velocity;
+        this.velocity += velocity;
     }
-    private Vector3 MirrorVelocity(Vector3 velocity, float speed, Vector3 mirrorNormal)
+    private Vector3 ReflectVelocity(Vector3 velocity, float speed, Vector3 mirrorNormal)
     {
         Vector3 newVelocity = velocity;
         newVelocity.Normalize();
@@ -71,21 +71,30 @@ public class Ball : MonoBehaviour
         _pivotTransform.forward = collision.contacts[0].normal;
 
         _graphicTransform.parent = _pivotTransform;
-        // calculating scale of ball 
-        float scaleValue = 1 - Mathf.Clamp(_speedInLastFrame * Time.deltaTime * 5, 0f, 0.7f);
 
-        Vector3 velocityBeforeCollision = _velocity;
-        Vector3 miroredVelocity = MirrorVelocity(_velocity, _speedInLastFrame, collision.contacts[0].normal);
-        _velocity = Vector3.zero;
+        float collisionPower = _speedInLastFrame * Time.deltaTime * 5;
+        // calculating diferent values of collision effect 
+        float scaleValue = 1 - Mathf.Clamp(collisionPower, 0f, 0.7f);
 
-        // scalingAnimation
+        float redColorValue = Mathf.Clamp(collisionPower, 0f, 1f);
+        Color collisionPowerColor = Color.Lerp(Color.white, Color.red, redColorValue);
+
+        Vector3 velocityBeforeCollision = velocity;
+        Vector3 miroredVelocity = ReflectVelocity(velocity, _speedInLastFrame, collision.contacts[0].normal);
+        velocity = Vector3.zero;
+
+        // scalingAnimationParamethers
         float animationTime = 0.2f;
         float startScale = _pivotTransform.localScale.x;
 
         for (float t = 0; t < animationTime + Time.deltaTime; t += Time.deltaTime)
         {
-            float process = Mathf.Sin(t / animationTime * Mathf.PI);
-            float newScale = Mathf.Lerp(1, scaleValue, process);
+            // number from 0 to 1 then from 1 to 0
+            // in the middle of animation number equals 1 and 0 in start and end
+            float value = Mathf.Sin(t / animationTime * Mathf.PI);
+
+            _meshRenderer.material.color = Color.Lerp(Color.white, collisionPowerColor, value);
+            float newScale = Mathf.Lerp(1, scaleValue, value);
 
             Vector3 currentScale = _pivotTransform.localScale;
             currentScale.z = newScale;
@@ -93,6 +102,7 @@ public class Ball : MonoBehaviour
             yield return null;
         }
 
+        // reset to defoult values
         _graphicTransform.parent = null;
 
         _pivotTransform.localPosition = Vector3.zero;
@@ -100,6 +110,6 @@ public class Ball : MonoBehaviour
 
         _graphicTransform.parent = _pivotTransform;
 
-        _velocity = miroredVelocity;
+        velocity = miroredVelocity;
     }
 }
