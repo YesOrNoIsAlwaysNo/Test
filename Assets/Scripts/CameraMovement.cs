@@ -25,7 +25,6 @@ public class CameraMovement : MonoBehaviour
     private void LateUpdate()
     {
         Vector3 cameraPosition = Ball.Instance.transform.position + Ball.Instance.velocity + _offset;
-        
         transform.position = Vector3.Lerp(transform.position, cameraPosition, Time.deltaTime * _speed);
     }
 }
