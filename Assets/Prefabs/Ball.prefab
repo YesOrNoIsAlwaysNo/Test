@@ -191,6 +191,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9098a2284ca95944b1ad610cdc96a82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _collisionEffectPrefab: {fileID: 7027519963753846076, guid: bb09ae6a46c80f744b4320fa75e94c81, type: 3}
   _graphicTransform: {fileID: 1153098786615113035}
   _pivotTransform: {fileID: 1153098787062198605}
   _meshRenderer: {fileID: 1153098786615113029}

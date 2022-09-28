@@ -31,6 +31,7 @@ public class CoinsManager : MonoBehaviour
     private void Start()
     {
         _startTextFontSize = _coinsAmountText.fontSize;
+        _coinsAmountText.text = 0.ToString();
     }
     public void AddCoints(int amountOfCoins)
     {
@@ -63,7 +64,7 @@ public class CoinsManager : MonoBehaviour
     private IEnumerator OnUICointsTextAnimation()
     {
         float animationTime = _updatingRate;
-        int endTextSize = _coinsAmountText.fontSize + _coinsAmountText.fontSize / 3;
+        int endTextSize = _coinsAmountText.fontSize + _coinsAmountText.fontSize / 2;
         for (float t = 0; t < animationTime + Time.deltaTime; t += Time.deltaTime)
         {
             float process = t / animationTime;
