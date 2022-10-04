@@ -5,6 +5,7 @@ public class Ball : MonoBehaviour
 {
     public static Ball Instance { get; private set; }
     [SerializeField]
+    [SerializeField]
     private GameObject _collisionEffectPrefab;
     // transform of ball's graphic part 
     [SerializeField]
